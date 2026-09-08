@@ -676,6 +676,7 @@ h2.section-title .hl-amber { color: var(--red-bright); }
 }
 .type-featured { background: var(--red-dim); color: var(--red-bright); border: 1px solid rgba(224,36,36,.3); }
 .type-data { background: var(--accent-dim); color: #60a5fa; border: 1px solid rgba(26,86,219,.3); }
+.type-ml { background: rgba(168,85,247,0.14); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
 .type-frontend { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,.25); }
 .type-utility { background: rgba(255,255,255,.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,.12); }
 
@@ -825,51 +826,268 @@ h2.section-title .hl-amber { color: var(--red-bright); }
 .stagger.vis > *:nth-child(5) { opacity: 1; transform: none; transition-delay: .28s; }
 .stagger.vis > *:nth-child(6) { opacity: 1; transform: none; transition-delay: .34s; }
 
+/* ─────────────── MOBILE INTERACTIVE DOCK & CONTROLS ─────────────── */
+.mobile-bottom-dock {
+  display: none;
+  position: fixed;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 120;
+  background: rgba(8, 14, 26, 0.90);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 40px;
+  padding: 6px 12px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(26, 86, 219, 0.2);
+  gap: 4px;
+  align-items: center;
+  max-width: calc(100vw - 24px);
+}
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 11px;
+  border-radius: 20px;
+  color: var(--text-muted);
+  font-size: .66rem;
+  font-family: 'IBM Plex Mono', monospace;
+  gap: 3px;
+  transition: all .2s cubic-bezier(.4, 0, .2, 1);
+  -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
+}
+.dock-item i { font-size: .88rem; }
+.dock-item:active { transform: scale(0.92); }
+.dock-item.active {
+  color: var(--white);
+  background: var(--accent-dim);
+  border: 1px solid rgba(26, 86, 219, 0.4);
+  box-shadow: 0 0 14px var(--accent-glow);
+}
+
+/* ─────────────── BACK TO TOP BUTTON ─────────────── */
+.back-to-top {
+  position: fixed;
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  right: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--accent-bright);
+  display: grid;
+  place-items: center;
+  font-size: .85rem;
+  z-index: 110;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px) scale(0.9);
+  transition: opacity .25s, transform .25s, visibility .25s, background .2s, border-color .2s;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  -webkit-tap-highlight-color: transparent;
+}
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+.back-to-top:hover, .back-to-top:active {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  color: var(--white);
+}
+
+/* ─────────────── TERMINAL MOBILE / TABLET NAV ─────────────── */
+.term-scripts-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.term-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: .68rem;
+  cursor: pointer;
+  transition: all .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.term-nav-btn:hover {
+  background: var(--accent-dim);
+  color: var(--accent-bright);
+  border-color: var(--accent);
+}
+.term-nav-btn:active {
+  transform: scale(0.92);
+}
+.term-pills {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.term-pill {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  font-size: .65rem;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.term-pill:hover, .term-pill.active {
+  background: var(--accent-dim);
+  border-color: var(--accent-bright);
+  color: var(--accent-bright);
+  font-weight: 600;
+}
+.term-pill.active {
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+.term-swipe-hint {
+  display: none;
+  text-align: center;
+  font-size: .68rem;
+  color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 7px 12px;
+  background: rgba(3, 6, 14, 0.7);
+  border-top: 1px solid var(--border);
+}
+
+/* ─────────────── TOUCH FEEDBACK ON CHIPS & HEADERS ─────────────── */
+.chip {
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.chip.touch-active .chip-tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) scale(1);
+}
+.project-header {
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .18s;
+}
+.project-header:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+.project-header:active {
+  background: var(--surface2);
+}
+.mobile-swipe-hint {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .68rem;
+  color: var(--text-dim);
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid var(--border);
+}
+
 /* ─────────────── RESPONSIVE ─────────────── */
 @media (max-width: 1024px) {
   .rail { display: none; }
-  .main { margin-left: 0; }
+  .main { margin-left: 0; padding-bottom: 84px; }
   .topbar { display: flex; }
+  .mobile-bottom-dock { display: flex; }
   .section { padding: 56px 32px; }
   #hero { padding: 48px 32px 56px; }
   .hero-grid { grid-template-columns: 1fr; gap: 36px; }
-  .contact-grid { grid-template-columns: 1fr 1fr; }
-  .footer { padding: 24px 32px; }
+  .contact-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer { padding: 24px 32px 96px; }
+  .term-swipe-hint { display: block; }
+  .mobile-swipe-hint { display: flex; }
 }
 
 @media (max-width: 720px) {
-  .section { padding: 48px 16px; }
-  #hero { padding: 36px 16px 48px; }
+  .section { padding: 44px 16px; }
+  #hero { padding: 32px 16px 44px; }
   .hero-h1 { font-size: clamp(1.9rem, 7vw, 2.6rem); }
+  .hero-stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    padding: 16px;
+  }
+  .hero-stat + .hero-stat::before { display: none; }
+  .stat-num { font-size: 1.35rem; }
   .about-body { grid-template-columns: 1fr; }
   .about-prose { grid-column: auto; padding: 20px; }
   .skills-layout { grid-template-columns: 1fr; }
   .skills-sidebar {
-    display: flex; flex-wrap: wrap; gap: 4px;
-    padding: 10px; border-right: none;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    padding: 10px 12px;
+    border-right: none;
     border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
-  .skill-tab { border-left: none; border-radius: 6px; padding: 7px 12px; border: 1px solid transparent; }
-  .skill-tab.active { border-color: var(--accent); }
+  .skills-sidebar::-webkit-scrollbar { display: none; }
+  .skill-tab {
+    flex-shrink: 0;
+    border-left: none;
+    border-radius: 20px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    white-space: nowrap;
+    font-size: .78rem;
+  }
+  .skill-tab.active {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
   .contact-grid { grid-template-columns: 1fr; }
-  .projects-list { gap: 12px; }
+  .projects-list { gap: 14px; }
   .project-header { padding: 16px 16px 0; }
-  .project-entry h3 { padding: 6px 16px 0; }
+  .project-entry h3 { padding: 8px 16px 0; font-size: 1rem; }
   .project-stack { padding: 8px 16px 0; }
   .project-body { padding: 10px 16px 16px; }
   .project-footer { padding: 12px 16px; }
   .edu-timeline::before { left: 9px; }
   .edu-dot { width: 19px; height: 19px; }
-  .certs-grid { grid-template-columns: 1fr 1fr; }
-  .footer { padding: 20px 16px; flex-direction: column; text-align: center; gap: 8px; }
-  .hero-btns { flex-direction: column; }
-  .btn-primary, .btn-outline { justify-content: center; }
+  .certs-grid { grid-template-columns: 1fr; }
+  .footer { padding: 20px 16px 96px; flex-direction: column; text-align: center; gap: 8px; }
+  .hero-btns { flex-direction: column; width: 100%; }
+  .btn-primary, .btn-outline { justify-content: center; width: 100%; }
+  .dock-item span { font-size: .6rem; }
+  .dock-item { padding: 5px 8px; }
 }
 
 @media (max-width: 440px) {
-  .certs-grid { grid-template-columns: 1fr; }
-  .edu-item { gap: 12px; }
-  .edu-content { padding: 16px; }
+  .hero-stats-row { grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; }
+  .dock-item span { display: none; }
+  .dock-item { padding: 8px 12px; }
+  .dock-item i { font-size: 1rem; }
+  .mobile-bottom-dock { border-radius: 30px; padding: 4px 8px; }
+  .terminal-body { padding: 14px; font-size: .75rem; min-height: 280px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -938,17 +1156,18 @@ h2.section-title .hl-amber { color: var(--red-bright); }
 </header>
 
 <div class="mobile-drawer" id="mobileDrawer">
-  <a href="#hero" class="nav-item"><i class="fa-solid fa-house"></i> Overview</a>
-  <a href="#about" class="nav-item"><i class="fa-solid fa-user"></i> About</a>
-  <a href="#skills" class="nav-item"><i class="fa-solid fa-code"></i> Skills</a>
-  <a href="#projects" class="nav-item"><i class="fa-solid fa-folder-open"></i> Projects</a>
-  <a href="#education" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Education</a>
-  <a href="#contact" class="nav-item"><i class="fa-solid fa-at"></i> Contact</a>
+  <a href="#hero" class="nav-item active" data-section="hero"><i class="fa-solid fa-house"></i> Overview</a>
+  <a href="#about" class="nav-item" data-section="about"><i class="fa-solid fa-user"></i> About</a>
+  <a href="#skills" class="nav-item" data-section="skills"><i class="fa-solid fa-code"></i> Skills</a>
+  <a href="#projects" class="nav-item" data-section="projects"><i class="fa-solid fa-folder-open"></i> Projects</a>
+  <a href="#education" class="nav-item" data-section="education"><i class="fa-solid fa-graduation-cap"></i> Education</a>
+  <a href="#contact" class="nav-item" data-section="contact"><i class="fa-solid fa-at"></i> Contact</a>
   <div class="drawer-socials">
-    <a href="https://www.linkedin.com/in/ishant-aneja" target="_blank" rel="noopener" class="social-btn"><i class="fa-brands fa-linkedin-in"></i></a>
-    <a href="https://github.com/IshantAneja" target="_blank" rel="noopener" class="social-btn"><i class="fa-brands fa-github"></i></a>
-    <a href="https://leetcode.com/u/IshantAneja/" target="_blank" rel="noopener" class="social-btn"><i class="fa-solid fa-code"></i></a>
-    <a href="mailto:Ishantaneja1415@gmail.com" class="social-btn"><i class="fa-regular fa-envelope"></i></a>
+    <a href="https://www.linkedin.com/in/ishant-aneja" target="_blank" rel="noopener" class="social-btn" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+    <a href="https://github.com/IshantAneja" target="_blank" rel="noopener" class="social-btn" title="GitHub"><i class="fa-brands fa-github"></i></a>
+    <a href="https://leetcode.com/u/IshantAneja/" target="_blank" rel="noopener" class="social-btn" title="LeetCode"><i class="fa-solid fa-code"></i></a>
+    <a href="mailto:Ishantaneja1415@gmail.com" class="social-btn" title="Email"><i class="fa-regular fa-envelope"></i></a>
+    <a href="tel:+919053505920" class="social-btn" title="Phone"><i class="fa-solid fa-phone"></i></a>
   </div>
 </div>
 
@@ -965,9 +1184,10 @@ h2.section-title .hl-amber { color: var(--red-bright); }
         </h1>
         <p class="hero-role">Data Analyst &amp; Python Developer</p>
         <p class="hero-desc">
-          Detail-oriented analyst and developer with experience in data extraction, cleaning, analysis,
-          and visualization. I turn raw data into decisions using Python, SQL, Power BI, and modern
-          full-stack tooling.
+          Data Analyst and Python Developer with hands-on experience in data extraction, cleaning, analysis,
+          and visualization using Python, SQL, Pandas, NumPy, and Matplotlib. Skilled in building REST APIs,
+          backend systems, and ETL pipelines with MongoDB, PostgreSQL, and SQL. Proficient in MS Excel, Power BI,
+          and Tableau for turning raw data into actionable business insights.
         </p>
         <div class="hero-stats-row">
           <div class="hero-stat">
@@ -983,17 +1203,17 @@ h2.section-title .hl-amber { color: var(--red-bright); }
             <div class="stat-label">Years Coding</div>
           </div>
           <div class="hero-stat">
-            <div class="stat-num"><span class="counter accent" data-target="10">0</span>+</div>
+            <div class="stat-num"><span class="counter accent" data-target="15">0</span>+</div>
             <div class="stat-label">Technologies</div>
           </div>
         </div>
         <div class="hero-chips">
           <span class="chip">Python<span class="chip-tooltip">Pandas · NumPy · Matplotlib</span></span>
-          <span class="chip">SQL<span class="chip-tooltip">PostgreSQL · MySQL · Joins</span></span>
-          <span class="chip">Power BI<span class="chip-tooltip">DAX · Power Query · KPIs</span></span>
-          <span class="chip">MongoDB<span class="chip-tooltip">Aggregation Pipelines · Atlas</span></span>
-          <span class="chip">MERN Stack<span class="chip-tooltip">React · Node · Express</span></span>
-          <span class="chip">ML<span class="chip-tooltip">Scikit-learn · IBM Certified</span></span>
+          <span class="chip">SQL<span class="chip-tooltip">PostgreSQL · Joins · Subqueries · Window Functions</span></span>
+          <span class="chip">Power BI &amp; Tableau<span class="chip-tooltip">Interactive Dashboards · DAX · KPIs · Excel</span></span>
+          <span class="chip">ETL Pipelines<span class="chip-tooltip">yFinance · SQLAlchemy · GitHub Actions</span></span>
+          <span class="chip">Machine Learning<span class="chip-tooltip">Scikit-learn · Risk Analytics · VaR</span></span>
+          <span class="chip">Databases &amp; APIs<span class="chip-tooltip">PostgreSQL · MongoDB · REST APIs</span></span>
         </div>
         <div class="hero-btns">
           <a href="#projects" class="btn-primary magnetic"><i class="fa-solid fa-folder-open"></i> View Projects</a>
@@ -1007,13 +1227,25 @@ h2.section-title .hl-amber { color: var(--red-bright); }
             <div class="t-dot r"></div>
             <div class="t-dot y"></div>
             <div class="t-dot g"></div>
-            <div class="t-filename"><i class="fa-brands fa-python"></i> <span id="termFilename">analyze.py</span></div>
+            <div class="term-scripts-nav">
+              <button class="term-nav-btn" id="termPrevBtn" title="Previous script" aria-label="Previous script"><i class="fa-solid fa-chevron-left"></i></button>
+              <div class="t-filename"><i class="fa-brands fa-python"></i> <span id="termFilename">analyze.py</span></div>
+              <button class="term-nav-btn" id="termNextBtn" title="Next script" aria-label="Next script"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
             <div class="terminal-bar-right">
-              <button class="run-btn" id="runBtn"><i class="fa-solid fa-play"></i> Run</button>
+              <div class="term-pills" id="termPills">
+                <button class="term-pill active" data-script="0" title="analyze.py" aria-label="Script 1">1</button>
+                <button class="term-pill" data-script="1" title="stock_etl.py" aria-label="Script 2">2</button>
+                <button class="term-pill" data-script="2" title="crypto_risk.py" aria-label="Script 3">3</button>
+              </div>
+              <button class="run-btn" id="runBtn" aria-label="Run script"><i class="fa-solid fa-play"></i> Run</button>
             </div>
           </div>
           <div class="terminal-body" id="terminalBody">
             <!-- Lines injected by JS -->
+          </div>
+          <div class="term-swipe-hint">
+            <i class="fa-solid fa-arrows-left-right"></i> Tap 1-3 or swipe to switch live scripts
           </div>
         </div>
       </div>
@@ -1028,39 +1260,39 @@ h2.section-title .hl-amber { color: var(--red-bright); }
       <div class="card about-prose">
         <p>
           I'm a <strong>Data Analyst and Python Developer</strong> based in Gurugram, India,
-          currently pursuing my MCA at K.R. Mangalam University. My work sits at the intersection
-          of analytics and engineering — I build things that process data and build things that
-          display it clearly.
+          currently pursuing my MCA at K.R. Mangalam University. My work bridges analytical inquiry
+          and software engineering — extracting, cleaning, and modeling data to turn complex metrics into
+          actionable business insights.
         </p>
         <p>
-          My toolkit covers the full analytics lifecycle: from raw extraction and cleaning with
-          <strong>Pandas and NumPy</strong>, through exploratory analysis and visualisation with
-          <strong>Matplotlib</strong>, to dashboards in <strong>Power BI</strong> and
-          <strong>Tableau</strong>. On the engineering side I work with <strong>Python, REST APIs,
-          MongoDB, SQL (PostgreSQL/MySQL)</strong>, and the <strong>MERN stack</strong> for
-          full-stack builds.
+          My toolkit spans the complete data lifecycle: hands-on experience in raw data extraction and wrangling using
+          <strong>Python, Pandas, and NumPy</strong>, exploratory analysis and charting with <strong>Matplotlib</strong>,
+          and interactive dashboards in <strong>Power BI, Tableau, and MS Excel</strong>. On the backend and data
+          engineering side, I design scheduled <strong>ETL pipelines</strong>, integrated <strong>PostgreSQL databases</strong>
+          using <strong>SQLAlchemy</strong>, write complex SQL queries using <strong>window functions and subqueries</strong>,
+          and build REST APIs with <strong>MongoDB and SQL</strong>.
         </p>
         <p>
-          I'm particularly interested in <strong>data pipelines, automated reporting, and
-          process optimisation</strong> — areas where clean data and good tooling make a
-          measurable difference.
+          I also apply <strong>machine learning fundamentals</strong> with <strong>Scikit-learn</strong>, building time-series
+          regression models and implementing financial risk analytics including Value at Risk (VaR), Expected Shortfall,
+          and strategy backtesting.
         </p>
       </div>
       <div class="about-card">
         <div class="acard-icon blue"><i class="fa-solid fa-chart-line"></i></div>
-        <div><h4>Analytics Pipeline</h4><p>Extraction → cleaning → EDA → interpretation → reporting.</p></div>
+        <div><h4>Data Analytics &amp; EDA</h4><p>Data cleaning, manipulation, EDA, and statistical visualization.</p></div>
       </div>
       <div class="about-card">
         <div class="acard-icon amber"><i class="fa-solid fa-server"></i></div>
-        <div><h4>Backend Systems</h4><p>Python, REST APIs, MongoDB, SQL — reliable and well-structured.</p></div>
+        <div><h4>ETL &amp; Databases</h4><p>Automated pipelines, PostgreSQL, MongoDB, SQL, and REST APIs.</p></div>
       </div>
       <div class="about-card">
         <div class="acard-icon green"><i class="fa-solid fa-table-columns"></i></div>
-        <div><h4>Dashboards</h4><p>Power BI, Tableau, and Excel for clear, interactive data storytelling.</p></div>
+        <div><h4>BI &amp; Reporting</h4><p>Power BI, Tableau, and MS Excel dashboards for business decisions.</p></div>
       </div>
       <div class="about-card">
         <div class="acard-icon purple"><i class="fa-solid fa-brain"></i></div>
-        <div><h4>Machine Learning</h4><p>Scikit-learn hands-on; IBM-certified in ML with Python.</p></div>
+        <div><h4>ML &amp; Risk Analytics</h4><p>Scikit-learn, time-series forecasting, VaR, and backtesting.</p></div>
       </div>
     </div>
   </section>
@@ -1071,138 +1303,207 @@ h2.section-title .hl-amber { color: var(--red-bright); }
     <h2 class="section-title">Technical <span class="hl-amber">stack</span></h2>
     <div class="skills-layout reveal">
       <div class="skills-sidebar" id="skillsSidebar">
-        <div class="skill-tab active" data-panel="analytics"><i class="fa-solid fa-magnifying-glass-chart"></i> Analytics</div>
-        <div class="skill-tab" data-panel="python"><i class="fa-brands fa-python"></i> Python</div>
+        <div class="skill-tab active" data-panel="analytics"><i class="fa-solid fa-magnifying-glass-chart"></i> Data Analysis</div>
+        <div class="skill-tab" data-panel="python"><i class="fa-brands fa-python"></i> Languages</div>
         <div class="skill-tab" data-panel="databases"><i class="fa-solid fa-database"></i> Databases</div>
-        <div class="skill-tab" data-panel="tools"><i class="fa-solid fa-wrench"></i> Tools</div>
-        <div class="skill-tab" data-panel="ml"><i class="fa-solid fa-robot"></i> ML / AI</div>
+        <div class="skill-tab" data-panel="tools"><i class="fa-solid fa-wrench"></i> Tools &amp; Platforms</div>
+        <div class="skill-tab" data-panel="ml"><i class="fa-solid fa-robot"></i> AI &amp; Concepts</div>
       </div>
       <div class="skills-content">
         <div class="skills-search-wrap">
-          <input type="text" class="skills-search" id="skillsSearch" placeholder="Search skills... (e.g. pandas, sql)" autocomplete="off">
+          <input type="text" class="skills-search" id="skillsSearch" placeholder="Search skills... (e.g. pandas, sql, etl, power bi)" autocomplete="off">
+        </div>
+        <div class="mobile-swipe-hint">
+          <i class="fa-solid fa-arrows-left-right"></i> Swipe left or right to switch skill categories
         </div>
 
         <div class="skill-panel active" id="panel-analytics">
-          <div class="skill-panel-header"><i class="fa-solid fa-magnifying-glass-chart"></i> Data Analytics</div>
+          <div class="skill-panel-header"><i class="fa-solid fa-magnifying-glass-chart"></i> Data Analysis &amp; Visualization</div>
           <div class="skill-rows">
             <div class="skill-row">
               <div class="skill-row-top"><span class="skill-name">Data Cleaning &amp; Manipulation</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-accent" data-w="92"></div></div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-top"><span class="skill-name">Exploratory Data Analysis (EDA)</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-accent" data-w="90"></div></div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-top"><span class="skill-name">Data Extraction &amp; ETL Pipelines</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-accent" data-w="86"></div></div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-top"><span class="skill-name">Power BI (Dashboards &amp; KPIs)</span><span class="skill-level">Advanced</span></div>
               <div class="skill-bar"><div class="skill-fill fill-accent" data-w="88"></div></div>
             </div>
             <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">Exploratory Data Analysis</span><span class="skill-level">Advanced</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-accent" data-w="85"></div></div>
+              <div class="skill-row-top"><span class="skill-name">Tableau Visual Analytics</span><span class="skill-level">Intermediate</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-accent" data-w="78"></div></div>
             </div>
             <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">Data Visualisation</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-row-top"><span class="skill-name">MS Excel (Formulas, Pivot Tables, Modeling)</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-accent" data-w="88"></div></div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-top"><span class="skill-name">Data Visualization (Matplotlib)</span><span class="skill-level">Advanced</span></div>
               <div class="skill-bar"><div class="skill-fill fill-accent" data-w="82"></div></div>
             </div>
-            <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">Data Extraction &amp; ETL</span><span class="skill-level">Intermediate</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-accent" data-w="74"></div></div>
-            </div>
-            <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">Data Interpretation</span><span class="skill-level">Intermediate</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-accent" data-w="70"></div></div>
-            </div>
+          </div>
+          <div class="skill-pills-grid" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);">
+            <span class="s-pill">Data Cleaning</span>
+            <span class="s-pill">Data Manipulation</span>
+            <span class="s-pill">Data Extraction</span>
+            <span class="s-pill">Exploratory Data Analysis (EDA)</span>
+            <span class="s-pill">Pandas</span>
+            <span class="s-pill">NumPy</span>
+            <span class="s-pill">Matplotlib</span>
+            <span class="s-pill">Power BI</span>
+            <span class="s-pill">Tableau</span>
+            <span class="s-pill">MS Excel</span>
           </div>
         </div>
 
         <div class="skill-panel" id="panel-python">
-          <div class="skill-panel-header"><i class="fa-brands fa-python"></i> Python &amp; Libraries</div>
+          <div class="skill-panel-header"><i class="fa-brands fa-python"></i> Programming Languages &amp; Core</div>
           <div class="skill-rows">
             <div class="skill-row">
               <div class="skill-row-top"><span class="skill-name">Python</span><span class="skill-level">Advanced</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="88"></div></div>
+              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="92"></div></div>
             </div>
             <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">Pandas</span><span class="skill-level">Advanced</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="85"></div></div>
-            </div>
-            <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">NumPy</span><span class="skill-level">Advanced</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="83"></div></div>
-            </div>
-            <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">Matplotlib</span><span class="skill-level">Intermediate</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="75"></div></div>
-            </div>
-            <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">Scikit-learn</span><span class="skill-level">Learning</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="55"></div></div>
+              <div class="skill-row-top"><span class="skill-name">SQL</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="90"></div></div>
             </div>
             <div class="skill-row">
               <div class="skill-row-top"><span class="skill-name">JavaScript</span><span class="skill-level">Intermediate</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="68"></div></div>
+              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="75"></div></div>
             </div>
+            <div class="skill-row">
+              <div class="skill-row-top"><span class="skill-name">Pandas</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="90"></div></div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-top"><span class="skill-name">NumPy</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="86"></div></div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-top"><span class="skill-name">Matplotlib</span><span class="skill-level">Intermediate</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-amber" data-w="80"></div></div>
+            </div>
+          </div>
+          <div class="skill-pills-grid" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);">
+            <span class="s-pill">Python</span>
+            <span class="s-pill">SQL</span>
+            <span class="s-pill">JavaScript</span>
+            <span class="s-pill">Pandas</span>
+            <span class="s-pill">NumPy</span>
+            <span class="s-pill">Matplotlib</span>
           </div>
         </div>
 
         <div class="skill-panel" id="panel-databases">
-          <div class="skill-panel-header"><i class="fa-solid fa-database"></i> Databases &amp; Backend</div>
+          <div class="skill-panel-header"><i class="fa-solid fa-database"></i> Databases &amp; Backend Systems</div>
           <div class="skill-rows">
             <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">SQL (Joins, Aggregations, Complex Queries)</span><span class="skill-level">Advanced</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-green" data-w="85"></div></div>
+              <div class="skill-row-top"><span class="skill-name">SQL (Joins, Aggregations, Window Functions, Subqueries)</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-green" data-w="92"></div></div>
             </div>
             <div class="skill-row">
               <div class="skill-row-top"><span class="skill-name">PostgreSQL</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-green" data-w="88"></div></div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-top"><span class="skill-name">MongoDB (Aggregation Pipelines)</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-green" data-w="84"></div></div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-top"><span class="skill-name">SQLAlchemy (ORM &amp; Database Integration)</span><span class="skill-level">Intermediate</span></div>
               <div class="skill-bar"><div class="skill-fill fill-green" data-w="80"></div></div>
             </div>
             <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">MongoDB</span><span class="skill-level">Advanced</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-green" data-w="82"></div></div>
+              <div class="skill-row-top"><span class="skill-name">REST APIs (Design, Validation, Performance)</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-green" data-w="85"></div></div>
             </div>
             <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">SQLAlchemy</span><span class="skill-level">Intermediate</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-green" data-w="72"></div></div>
+              <div class="skill-row-top"><span class="skill-name">WebSockets &amp; Real-time Architecture</span><span class="skill-level">Intermediate</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-green" data-w="74"></div></div>
             </div>
-            <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">REST APIs</span><span class="skill-level">Intermediate</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-green" data-w="78"></div></div>
-            </div>
-            <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">WebSockets</span><span class="skill-level">Intermediate</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-green" data-w="65"></div></div>
-            </div>
+          </div>
+          <div class="skill-pills-grid" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);">
+            <span class="s-pill">PostgreSQL</span>
+            <span class="s-pill">MongoDB</span>
+            <span class="s-pill">SQL</span>
+            <span class="s-pill">Window Functions</span>
+            <span class="s-pill">Subqueries</span>
+            <span class="s-pill">Aggregations</span>
+            <span class="s-pill">Joins</span>
+            <span class="s-pill">SQLAlchemy</span>
+            <span class="s-pill">REST APIs</span>
+            <span class="s-pill">WebSockets</span>
           </div>
         </div>
 
         <div class="skill-panel" id="panel-tools">
-          <div class="skill-panel-header"><i class="fa-solid fa-wrench"></i> Tools &amp; Reporting</div>
+          <div class="skill-panel-header"><i class="fa-solid fa-wrench"></i> Tools &amp; Platforms</div>
           <div class="skill-pills-grid">
-            <span class="s-pill">Power BI</span>
-            <span class="s-pill">Tableau</span>
-            <span class="s-pill">MS Excel</span>
-            <span class="s-pill">Power Query</span>
             <span class="s-pill">Git</span>
             <span class="s-pill">GitHub</span>
             <span class="s-pill">GitHub Actions</span>
-            <span class="s-pill">yFinance</span>
-            <span class="s-pill">DSA</span>
-            <span class="s-pill">Prompt Engineering</span>
+            <span class="s-pill">SQLAlchemy</span>
+            <span class="s-pill">Scikit-learn</span>
+            <span class="s-pill">yFinance API</span>
+            <span class="s-pill">Binance API</span>
+            <span class="s-pill">Power BI</span>
+            <span class="s-pill">Tableau</span>
+            <span class="s-pill">MS Excel</span>
+            <span class="s-pill">VS Code</span>
+            <span class="s-pill">Postman</span>
           </div>
         </div>
 
         <div class="skill-panel" id="panel-ml">
-          <div class="skill-panel-header"><i class="fa-solid fa-robot"></i> Machine Learning &amp; AI</div>
+          <div class="skill-panel-header"><i class="fa-solid fa-robot"></i> AI Tools &amp; Concepts</div>
+          <div style="margin-bottom: 16px;">
+            <span style="font-size: .72rem; color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .08em; display: block; margin-bottom: 8px;">AI &amp; Generative AI Tools</span>
+            <div class="skill-pills-grid">
+              <span class="s-pill">ChatGPT</span>
+              <span class="s-pill">Claude</span>
+              <span class="s-pill">Google Gemini</span>
+              <span class="s-pill">GitHub Copilot</span>
+              <span class="s-pill">Scikit-learn</span>
+            </div>
+          </div>
           <div class="skill-rows">
             <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">Machine Learning (Basics)</span><span class="skill-level">Intermediate</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-purple" data-w="60"></div></div>
+              <div class="skill-row-top"><span class="skill-name">REST APIs</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-purple" data-w="86"></div></div>
             </div>
             <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">Scikit-learn</span><span class="skill-level">Learning</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-purple" data-w="52"></div></div>
+              <div class="skill-row-top"><span class="skill-name">ETL Pipelines</span><span class="skill-level">Advanced</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-purple" data-w="88"></div></div>
             </div>
             <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">GenAI &amp; Prompt Engineering</span><span class="skill-level">Intermediate</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-purple" data-w="65"></div></div>
+              <div class="skill-row-top"><span class="skill-name">Data Structures &amp; Algorithms (DSA)</span><span class="skill-level">Intermediate</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-purple" data-w="74"></div></div>
             </div>
             <div class="skill-row">
-              <div class="skill-row-top"><span class="skill-name">Deep Learning (Foundations)</span><span class="skill-level">Learning</span></div>
-              <div class="skill-bar"><div class="skill-fill fill-purple" data-w="40"></div></div>
+              <div class="skill-row-top"><span class="skill-name">Machine Learning Fundamentals</span><span class="skill-level">Intermediate</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-purple" data-w="78"></div></div>
             </div>
+            <div class="skill-row">
+              <div class="skill-row-top"><span class="skill-name">Financial Risk Analytics (VaR &amp; Expected Shortfall)</span><span class="skill-level">Intermediate</span></div>
+              <div class="skill-bar"><div class="skill-fill fill-purple" data-w="76"></div></div>
+            </div>
+          </div>
+          <div class="skill-pills-grid" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);">
+            <span class="s-pill">REST APIs</span>
+            <span class="s-pill">ETL Pipelines</span>
+            <span class="s-pill">Data Structures &amp; Algorithms (DSA)</span>
+            <span class="s-pill">Machine Learning Fundamentals</span>
+            <span class="s-pill">Time-Series Regression</span>
+            <span class="s-pill">Value at Risk (VaR)</span>
+            <span class="s-pill">Expected Shortfall</span>
+            <span class="s-pill">Feature Engineering</span>
           </div>
         </div>
 
@@ -1217,44 +1518,10 @@ h2.section-title .hl-amber { color: var(--red-bright); }
     <div class="projects-list stagger">
 
       <article class="project-entry" id="proj-1">
-        <div class="project-header">
+        <div class="project-header" onclick="toggleProject('proj-1')">
           <div class="project-meta">
-            <span class="project-type type-featured">Featured</span>
-            <button class="project-toggle" onclick="toggleProject('proj-1')"><i class="fa-solid fa-chevron-down"></i> Details</button>
-          </div>
-        </div>
-        <h3>Skill Exchange Platform</h3>
-        <div class="project-stack">
-          <span class="stack-tag">Python</span><span class="stack-tag">JavaScript</span>
-          <span class="stack-tag">MongoDB</span><span class="stack-tag">React</span>
-          <span class="stack-tag">Node.js</span><span class="stack-tag">WebSockets</span>
-        </div>
-        <div class="project-body">
-          <p>Full-stack MERN platform where users can list and exchange skills. Built with real-time interaction support, optimised data queries, and activity analytics.</p>
-          <div class="project-details">
-            <ul class="bullet-list">
-              <li>Built full-stack MERN application supporting real-time interactions using WebSockets</li>
-              <li>Designed optimized REST APIs for efficient data handling</li>
-              <li>Implemented MongoDB aggregation queries for performance optimization</li>
-              <li>Enabled user analytics and activity tracking</li>
-            </ul>
-          </div>
-        </div>
-        <div class="project-footer">
-          <a href="https://skill-exchange-system.vercel.app" target="_blank" rel="noopener" class="proj-link">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i> skill-exchange-system.vercel.app
-          </a>
-          <a href="https://github.com/IshantAneja" target="_blank" rel="noopener" class="proj-link">
-            <i class="fa-brands fa-github"></i> github.com/IshantAneja
-          </a>
-        </div>
-      </article>
-
-      <article class="project-entry" id="proj-2">
-        <div class="project-header">
-          <div class="project-meta">
-            <span class="project-type type-data">Data Pipeline</span>
-            <button class="project-toggle" onclick="toggleProject('proj-2')"><i class="fa-solid fa-chevron-down"></i> Details</button>
+            <span class="project-type type-data">ETL Pipeline</span>
+            <button class="project-toggle" aria-label="Toggle details"><i class="fa-solid fa-chevron-down"></i> Details</button>
           </div>
         </div>
         <h3>Real-Time Stock Market Analytics Pipeline</h3>
@@ -1264,14 +1531,47 @@ h2.section-title .hl-amber { color: var(--red-bright); }
           <span class="stack-tag">yFinance</span><span class="stack-tag">GitHub Actions</span>
         </div>
         <div class="project-body">
-          <p>Automated ETL pipeline that fetches live stock market data for NSE-listed companies and stores it for downstream analytics.</p>
+          <p>Automated ETL pipeline tracking daily price data for 2,392+ NSE-listed tickers via the yFinance API, storing historical data in PostgreSQL with automated GitHub Actions workflows.</p>
           <div class="project-details">
             <ul class="bullet-list">
-              <li>Developed an automated ETL pipeline to fetch live stock market data for NSE-listed companies using the yFinance API</li>
-              <li>Designed and integrated a PostgreSQL database using SQLAlchemy to store historical stock prices</li>
-              <li>Automated data collection using GitHub Actions for scheduled execution</li>
-              <li>Performed data cleaning and transformation with Pandas for downstream analytics</li>
-              <li>Implemented logging and error handling to improve pipeline reliability</li>
+              <li>Built an automated ETL pipeline tracking daily price data for 2,392+ NSE-listed tickers via the yFinance API</li>
+              <li>Designed and integrated a PostgreSQL database using SQLAlchemy to store and query historical stock price data</li>
+              <li>Automated scheduled data collection using GitHub Actions, removing the need for manual pipeline runs</li>
+              <li>Performed data cleaning and transformation with Pandas to prepare datasets for downstream analytics</li>
+              <li>Implemented logging and error handling to improve pipeline reliability and simplify debugging</li>
+            </ul>
+          </div>
+        </div>
+        <div class="project-footer">
+          <a href="https://github.com/IshantAneja" target="_blank" rel="noopener" class="proj-link">
+            <i class="fa-brands fa-github"></i> github.com/IshantAneja
+          </a>
+        </div>
+      </article>
+
+      <article class="project-entry" id="proj-2">
+        <div class="project-header" onclick="toggleProject('proj-2')">
+          <div class="project-meta">
+            <span class="project-type type-ml">ML &amp; Risk Analytics</span>
+            <button class="project-toggle" aria-label="Toggle details"><i class="fa-solid fa-chevron-down"></i> Details</button>
+          </div>
+        </div>
+        <h3>Cryptocurrency Risk Prediction &amp; Analytics</h3>
+        <div class="project-stack">
+          <span class="stack-tag">Python</span><span class="stack-tag">Scikit-learn</span>
+          <span class="stack-tag">Binance API</span><span class="stack-tag">Power BI</span>
+          <span class="stack-tag">Pandas</span>
+        </div>
+        <div class="project-body">
+          <p>Cryptocurrency risk-analysis and time-series return forecasting pipeline using historical Binance data for BTC, ETH, SOL, XRP, and ADA with financial risk modeling (VaR/Expected Shortfall) and Power BI dashboards.</p>
+          <div class="project-details">
+            <ul class="bullet-list">
+              <li>Developed a cryptocurrency risk-analysis pipeline using historical Binance data for BTC, ETH, SOL, XRP, and ADA</li>
+              <li>Engineered 30+ financial and technical features including RSI, MACD, Bollinger Bands, ATR, ADX, OBV, MFI, volatility, momentum, and lag features</li>
+              <li>Built a time-series regression model to predict next-day cryptocurrency returns using chronological train-validation-test splitting to prevent data leakage</li>
+              <li>Evaluated model performance using MAE, RMSE, and R², and performed actual-vs-predicted analysis</li>
+              <li>Implemented VaR, Parametric VaR, Expected Shortfall, coverage analysis, and strategy backtesting to assess financial risk</li>
+              <li>Developed four Power BI dashboards covering market overview, technical indicators, model performance, and risk analytics</li>
             </ul>
           </div>
         </div>
@@ -1283,10 +1583,10 @@ h2.section-title .hl-amber { color: var(--red-bright); }
       </article>
 
       <article class="project-entry" id="proj-3">
-        <div class="project-header">
+        <div class="project-header" onclick="toggleProject('proj-3')">
           <div class="project-meta">
-            <span class="project-type type-utility">SQL Analysis</span>
-            <button class="project-toggle" onclick="toggleProject('proj-3')"><i class="fa-solid fa-chevron-down"></i> Details</button>
+            <span class="project-type type-utility">SQL Analytics</span>
+            <button class="project-toggle" aria-label="Toggle details"><i class="fa-solid fa-chevron-down"></i> Details</button>
           </div>
         </div>
         <h3>Music Store Sales Analysis</h3>
@@ -1294,7 +1594,7 @@ h2.section-title .hl-amber { color: var(--red-bright); }
           <span class="stack-tag">PostgreSQL</span><span class="stack-tag">SQL</span><span class="stack-tag">Python</span>
         </div>
         <div class="project-body">
-          <p>Analysis of the Chinook music retail dataset to answer business-driven questions on customer value, genre trends, and city-level revenue.</p>
+          <p>Analysis of the Chinook music retail dataset in PostgreSQL to answer business-driven questions on customer lifetime value, genre trends, and city-level revenue.</p>
           <div class="project-details">
             <ul class="bullet-list">
               <li>Analyzed the Chinook music retail dataset in PostgreSQL to answer business-driven questions on customer value, genre trends, and city-level revenue</li>
@@ -1311,10 +1611,44 @@ h2.section-title .hl-amber { color: var(--red-bright); }
       </article>
 
       <article class="project-entry" id="proj-4">
-        <div class="project-header">
+        <div class="project-header" onclick="toggleProject('proj-4')">
+          <div class="project-meta">
+            <span class="project-type type-featured">Full-Stack / MERN</span>
+            <button class="project-toggle" aria-label="Toggle details"><i class="fa-solid fa-chevron-down"></i> Details</button>
+          </div>
+        </div>
+        <h3>Skill Exchange Platform</h3>
+        <div class="project-stack">
+          <span class="stack-tag">Python</span><span class="stack-tag">JavaScript</span>
+          <span class="stack-tag">MongoDB</span><span class="stack-tag">MERN Stack</span>
+          <span class="stack-tag">WebSockets</span>
+        </div>
+        <div class="project-body">
+          <p>Full-stack MERN application supporting real-time interactions using WebSockets, optimized REST APIs, and MongoDB aggregation pipelines with user engagement analytics.</p>
+          <div class="project-details">
+            <ul class="bullet-list">
+              <li>Built a full-stack MERN application supporting real-time interactions using WebSockets</li>
+              <li>Designed optimized REST APIs for efficient data handling between client and server</li>
+              <li>Implemented MongoDB aggregation queries to improve query performance</li>
+              <li>Enabled user analytics and activity tracking features for platform engagement insights</li>
+            </ul>
+          </div>
+        </div>
+        <div class="project-footer">
+          <a href="https://skill-exchange-system.vercel.app" target="_blank" rel="noopener" class="proj-link">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> skill-exchange-system.vercel.app
+          </a>
+          <a href="https://github.com/IshantAneja" target="_blank" rel="noopener" class="proj-link">
+            <i class="fa-brands fa-github"></i> github.com/IshantAneja
+          </a>
+        </div>
+      </article>
+
+      <article class="project-entry" id="proj-5">
+        <div class="project-header" onclick="toggleProject('proj-5')">
           <div class="project-meta">
             <span class="project-type type-frontend">Frontend</span>
-            <button class="project-toggle" onclick="toggleProject('proj-4')"><i class="fa-solid fa-chevron-down"></i> Details</button>
+            <button class="project-toggle" aria-label="Toggle details"><i class="fa-solid fa-chevron-down"></i> Details</button>
           </div>
         </div>
         <h3>Portfolio Website</h3>
@@ -1322,12 +1656,12 @@ h2.section-title .hl-amber { color: var(--red-bright); }
           <span class="stack-tag">HTML</span><span class="stack-tag">CSS</span><span class="stack-tag">JavaScript</span>
         </div>
         <div class="project-body">
-          <p>Personal portfolio showcasing projects, skills, and professional focus — designed with a distinctive IDE-inspired layout and deployed on the web.</p>
+          <p>Personal portfolio showcasing projects, skills, and professional focus — designed with a distinctive IDE-inspired layout, interactive terminal, and dynamic search.</p>
           <div class="project-details">
             <ul class="bullet-list">
               <li>Built and deployed personal portfolio showcasing projects and skills</li>
               <li>Fully responsive across desktop, tablet, and mobile</li>
-              <li>Custom animations and interactive skill panels</li>
+              <li>Custom animations, interactive terminal scripts, and dynamic skill filters</li>
             </ul>
           </div>
         </div>
@@ -1360,7 +1694,7 @@ h2.section-title .hl-amber { color: var(--red-bright); }
         <div class="edu-content">
           <span class="edu-year">2025</span>
           <h3>Bachelor of Computer Applications (BCA)</h3>
-          <p>MDU, Rohtak</p>
+          <p>Maharshi Dayanand University (MDU), Rohtak</p>
         </div>
       </div>
       <div class="edu-item">
@@ -1452,13 +1786,48 @@ h2.section-title .hl-amber { color: var(--red-bright); }
       </div>
     </div>
   </section>
+
+  <footer class="footer">
     <div class="footer-copy">
-      <span>Ishant Aneja</span> · Data Analyst &amp; Python Developer · Gurugram
+      <span>Ishant Aneja</span> · Data Analyst &amp; Python Developer · Gurugram, India
     </div>
     <div class="footer-copy" style="color: var(--text-dim);">Built with HTML · CSS · JS</div>
   </footer>
 
 </main>
+
+<!-- ─────────────── MOBILE & TABLET BOTTOM DOCK ─────────────── -->
+<nav class="mobile-bottom-dock" id="mobileBottomDock" aria-label="Mobile Navigation">
+  <a href="#hero" class="dock-item active" data-section="hero" aria-label="Overview">
+    <i class="fa-solid fa-house"></i>
+    <span>Overview</span>
+  </a>
+  <a href="#about" class="dock-item" data-section="about" aria-label="About">
+    <i class="fa-solid fa-user"></i>
+    <span>About</span>
+  </a>
+  <a href="#skills" class="dock-item" data-section="skills" aria-label="Skills">
+    <i class="fa-solid fa-code"></i>
+    <span>Skills</span>
+  </a>
+  <a href="#projects" class="dock-item" data-section="projects" aria-label="Projects">
+    <i class="fa-solid fa-folder-open"></i>
+    <span>Projects</span>
+  </a>
+  <a href="#education" class="dock-item" data-section="education" aria-label="Education">
+    <i class="fa-solid fa-graduation-cap"></i>
+    <span>Edu</span>
+  </a>
+  <a href="#contact" class="dock-item" data-section="contact" aria-label="Contact">
+    <i class="fa-solid fa-envelope"></i>
+    <span>Contact</span>
+  </a>
+</nav>
+
+<!-- ─────────────── BACK TO TOP BUTTON ─────────────── -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+  <i class="fa-solid fa-chevron-up"></i>
+</button>
 
 <script>
 /* ═══════════════════════════════════════════
@@ -1563,19 +1932,27 @@ document.addEventListener('keydown', e => {
 setTimeout(() => showToast('Press <kbd>?</kbd> for keyboard shortcuts'), 3000);
 
 /* ═══════════════════════════════════════════
-   ACTIVE NAV TRACKING
+   ACTIVE NAV TRACKING (Desktop, Mobile Dock & Drawer)
 ═══════════════════════════════════════════ */
 const sections = document.querySelectorAll('section[id]');
-const navItems = document.querySelectorAll('.rail-nav .nav-item');
+const railNavItems = document.querySelectorAll('.rail-nav .nav-item');
+const dockNavItems = document.querySelectorAll('.mobile-bottom-dock .dock-item');
+const drawerNavItems = document.querySelectorAll('.mobile-drawer .nav-item');
+
 const sectionObserver = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
-      navItems.forEach(n => n.classList.remove('active'));
-      const active = document.querySelector(`.rail-nav [data-section="${e.target.id}"]`);
-      if (active) active.classList.add('active');
+      const sectionId = e.target.id;
+      railNavItems.forEach(n => n.classList.remove('active'));
+      dockNavItems.forEach(d => d.classList.remove('active'));
+      drawerNavItems.forEach(dr => dr.classList.remove('active'));
+
+      document.querySelector(`.rail-nav [data-section="${sectionId}"]`)?.classList.add('active');
+      document.querySelector(`.mobile-bottom-dock [data-section="${sectionId}"]`)?.classList.add('active');
+      document.querySelector(`.mobile-drawer [data-section="${sectionId}"]`)?.classList.add('active');
     }
   });
-}, { threshold: 0.35 });
+}, { threshold: 0.3 });
 sections.forEach(s => sectionObserver.observe(s));
 
 /* ═══════════════════════════════════════════
@@ -1606,61 +1983,57 @@ const statsRow = document.querySelector('.hero-stats-row');
 if (statsRow) counterObserver.observe(statsRow);
 
 /* ═══════════════════════════════════════════
-   TERMINAL — MULTI-SCRIPT TYPEWRITER
+   TERMINAL — MULTI-SCRIPT TYPEWRITER & MOBILE CONTROLS
 ═══════════════════════════════════════════ */
 const scripts = [
   {
     filename: 'analyze.py',
     lines: [
-      { html: '<span class="t-comment"># Ishant Aneja · Data Analyst</span>' },
+      { html: '<span class="t-comment"># Data extraction &amp; exploratory analysis</span>' },
       { html: '' },
       { html: '<span class="t-keyword">import</span> <span class="t-var">pandas</span> <span class="t-keyword">as</span> <span class="t-var">pd</span>' },
       { html: '<span class="t-keyword">import</span> <span class="t-var">numpy</span> <span class="t-keyword">as</span> <span class="t-var">np</span>' },
       { html: '' },
-      { html: '<span class="t-var">df</span> <span class="t-op">=</span> <span class="t-var">pd</span>.<span class="t-fn">read_csv</span>(<span class="t-str">"sales_data.csv"</span>)' },
-      { html: '<span class="t-var">df</span> <span class="t-op">=</span> <span class="t-var">df</span>.<span class="t-fn">dropna</span>().<span class="t-fn">reset_index</span>(<span class="t-var">drop</span><span class="t-op">=</span><span class="t-keyword">True</span>)' },
+      { html: '<span class="t-var">df</span> <span class="t-op">=</span> <span class="t-var">pd</span>.<span class="t-fn">read_csv</span>(<span class="t-str">"sales_dataset.csv"</span>)' },
+      { html: '<span class="t-var">df_clean</span> <span class="t-op">=</span> <span class="t-var">df</span>.<span class="t-fn">dropna</span>().<span class="t-fn">reset_index</span>(<span class="t-var">drop</span><span class="t-op">=</span><span class="t-keyword">True</span>)' },
       { html: '' },
-      { html: '<span class="t-comment"># Compute key metrics</span>' },
-      { html: '<span class="t-var">total</span> <span class="t-op">=</span> <span class="t-var">df</span>[<span class="t-str">"revenue"</span>].<span class="t-fn">sum</span>()' },
-      { html: '<span class="t-var">avg</span> <span class="t-op">=</span> <span class="t-var">np</span>.<span class="t-fn">mean</span>(<span class="t-var">df</span>[<span class="t-str">"score"</span>])' },
-      { html: '<span class="t-fn">print</span>(<span class="t-str">f"Revenue: ₹{<span class="t-var">total</span>:,.0f} | Avg: {<span class="t-var">avg</span>:.2f}"</span>)' },
-      { html: '<span class="t-out">→  Revenue: ₹1,24,83,200 | Avg: 87.42</span>' },
+      { html: '<span class="t-comment"># EDA summary metrics</span>' },
+      { html: '<span class="t-var">revenue</span> <span class="t-op">=</span> <span class="t-var">df_clean</span>[<span class="t-str">"revenue"</span>].<span class="t-fn">sum</span>()' },
+      { html: '<span class="t-var">retention</span> <span class="t-op">=</span> <span class="t-var">np</span>.<span class="t-fn">mean</span>(<span class="t-var">df_clean</span>[<span class="t-str">"retention_rate"</span>])' },
+      { html: '<span class="t-fn">print</span>(<span class="t-str">f"Revenue: ₹{<span class="t-var">revenue</span>:,.0f} | Retention: {<span class="t-var">retention</span>:.1f}%"</span>)' },
+      { html: '<span class="t-out">→  Revenue: ₹1,24,83,200 | Retention: 94.2%</span>' },
     ]
   },
   {
-    filename: 'stock_pipeline.py',
+    filename: 'stock_etl.py',
     lines: [
-      { html: '<span class="t-comment"># Real-time stock market ETL pipeline</span>' },
+      { html: '<span class="t-comment"># Real-time ETL: 2,392+ NSE tickers via yFinance</span>' },
       { html: '' },
       { html: '<span class="t-keyword">import</span> <span class="t-var">yfinance</span> <span class="t-keyword">as</span> <span class="t-var">yf</span>' },
       { html: '<span class="t-keyword">from</span> <span class="t-var">sqlalchemy</span> <span class="t-keyword">import</span> <span class="t-var">create_engine</span>' },
       { html: '' },
-      { html: '<span class="t-var">engine</span> <span class="t-op">=</span> <span class="t-fn">create_engine</span>(<span class="t-str">"postgresql://..."</span>)' },
-      { html: '<span class="t-var">data</span> <span class="t-op">=</span> <span class="t-var">yf</span>.<span class="t-fn">download</span>(<span class="t-str">"RELIANCE.NS"</span>, <span class="t-var">period</span><span class="t-op">=</span><span class="t-str">"1d"</span>)' },
-      { html: '' },
-      { html: '<span class="t-comment"># Clean and persist</span>' },
-      { html: '<span class="t-var">data</span> <span class="t-op">=</span> <span class="t-var">data</span>.<span class="t-fn">dropna</span>()' },
-      { html: '<span class="t-var">data</span>.<span class="t-fn">to_sql</span>(<span class="t-str">"stock_prices"</span>, <span class="t-var">engine</span>, <span class="t-var">if_exists</span><span class="t-op">=</span><span class="t-str">"append"</span>)' },
-      { html: '<span class="t-fn">print</span>(<span class="t-str">"Pipeline run complete"</span>)' },
-      { html: '<span class="t-out">→  Inserted 1 row · Scheduled via GitHub Actions</span>' },
+      { html: '<span class="t-var">engine</span> <span class="t-op">=</span> <span class="t-fn">create_engine</span>(<span class="t-str">"postgresql://postgres:***@db/nse"</span>)' },
+      { html: '<span class="t-var">tickers</span> <span class="t-op">=</span> <span class="t-fn">get_nse_tickers</span>()  <span class="t-comment"># 2,392 symbols</span>' },
+      { html: '<span class="t-var">data</span> <span class="t-op">=</span> <span class="t-var">yf</span>.<span class="t-fn">download</span>(<span class="t-var">tickers</span>, <span class="t-var">period</span><span class="t-op">=</span><span class="t-str">"1d"</span>)' },
+      { html: '<span class="t-var">data_clean</span> <span class="t-op">=</span> <span class="t-fn">transform_and_clean</span>(<span class="t-var">data</span>)' },
+      { html: '<span class="t-var">data_clean</span>.<span class="t-fn">to_sql</span>(<span class="t-str">"daily_prices"</span>, <span class="t-var">engine</span>, <span class="t-var">if_exists</span><span class="t-op">=</span><span class="t-str">"append"</span>)' },
+      { html: '<span class="t-fn">print</span>(<span class="t-str">"Scheduled via GitHub Actions workflow"</span>)' },
+      { html: '<span class="t-out">→  2,392 tickers synced to PostgreSQL database</span>' },
     ]
   },
   {
-    filename: 'ml_model.py',
+    filename: 'crypto_risk.py',
     lines: [
-      { html: '<span class="t-comment"># Scikit-learn classifier</span>' },
+      { html: '<span class="t-comment"># Crypto risk modeling: BTC, ETH, SOL, XRP, ADA</span>' },
       { html: '' },
-      { html: '<span class="t-keyword">from</span> <span class="t-var">sklearn.ensemble</span> <span class="t-keyword">import</span> <span class="t-var">RandomForestClassifier</span>' },
-      { html: '<span class="t-keyword">from</span> <span class="t-var">sklearn.model_selection</span> <span class="t-keyword">import</span> <span class="t-var">train_test_split</span>' },
-      { html: '<span class="t-keyword">from</span> <span class="t-var">sklearn.metrics</span> <span class="t-keyword">import</span> <span class="t-var">accuracy_score</span>' },
-      { html: '' },
-      { html: '<span class="t-var">X_train</span>, <span class="t-var">X_test</span>, <span class="t-var">y_train</span>, <span class="t-var">y_test</span> <span class="t-op">=</span> <span class="t-fn">train_test_split</span>(<span class="t-var">X</span>, <span class="t-var">y</span>, <span class="t-var">test_size</span><span class="t-op">=</span><span class="t-num">.2</span>)' },
-      { html: '<span class="t-var">model</span> <span class="t-op">=</span> <span class="t-var">RandomForestClassifier</span>(<span class="t-var">n_estimators</span><span class="t-op">=</span><span class="t-num">100</span>)' },
+      { html: '<span class="t-keyword">from</span> <span class="t-var">sklearn.metrics</span> <span class="t-keyword">import</span> <span class="t-var">r2_score</span>, <span class="t-var">mean_squared_error</span>' },
+      { html: '<span class="t-comment"># 30+ features: RSI, MACD, Bollinger Bands, ATR</span>' },
+      { html: '<span class="t-var">X_train</span>, <span class="t-var">X_test</span>, <span class="t-var">y_train</span>, <span class="t-var">y_test</span> <span class="t-op">=</span> <span class="t-fn">chronological_split</span>(<span class="t-var">df</span>)' },
       { html: '<span class="t-var">model</span>.<span class="t-fn">fit</span>(<span class="t-var">X_train</span>, <span class="t-var">y_train</span>)' },
-      { html: '' },
-      { html: '<span class="t-var">acc</span> <span class="t-op">=</span> <span class="t-fn">accuracy_score</span>(<span class="t-var">y_test</span>, <span class="t-var">model</span>.<span class="t-fn">predict</span>(<span class="t-var">X_test</span>))' },
-      { html: '<span class="t-fn">print</span>(<span class="t-str">f"Accuracy: {<span class="t-var">acc</span>*100:.1f}%"</span>)' },
-      { html: '<span class="t-out">→  Accuracy: 92.4%</span>' },
+      { html: '<span class="t-var">var_95</span> <span class="t-op">=</span> <span class="t-fn">parametric_var</span>(<span class="t-var">y_pred</span>, <span class="t-var">conf</span><span class="t-op">=</span><span class="t-num">0.95</span>)' },
+      { html: '<span class="t-var">es_95</span> <span class="t-op">=</span> <span class="t-fn">expected_shortfall</span>(<span class="t-var">y_pred</span>, <span class="t-var">conf</span><span class="t-op">=</span><span class="t-num">0.95</span>)' },
+      { html: '<span class="t-fn">print</span>(<span class="t-str">f"R²: {<span class="t-var">r2</span>:.3f} | VaR(95%): {<span class="t-var">var_95</span>:.2%} | ES: {<span class="t-var">es_95</span>:.2%}"</span>)' },
+      { html: '<span class="t-out">→  R²: 0.842 | 95% VaR: -3.85% | Expected Shortfall: -5.12%</span>' },
     ]
   }
 ];
@@ -1675,11 +2048,18 @@ function clearTerminal() {
   tbody.innerHTML = '';
 }
 
+function updateTermPills(idx) {
+  document.querySelectorAll('.term-pill').forEach((pill, i) => {
+    pill.classList.toggle('active', i === idx);
+  });
+}
+
 function runScript(idx) {
   if (isRunning) return;
   isRunning = true;
   const script = scripts[idx];
   termFilename.textContent = script.filename;
+  updateTermPills(idx);
   runBtn.classList.add('running');
   runBtn.innerHTML = '<i class="fa-solid fa-stop"></i> Running';
   clearTerminal();
@@ -1687,7 +2067,6 @@ function runScript(idx) {
   let lineIdx = 0;
   function nextLine() {
     if (lineIdx >= script.lines.length) {
-      // done
       const cur = document.createElement('span');
       cur.className = 't-cursor';
       tbody.appendChild(cur);
@@ -1702,7 +2081,7 @@ function runScript(idx) {
     tbody.appendChild(span);
     tbody.scrollTop = tbody.scrollHeight;
     lineIdx++;
-    const delay = script.lines[lineIdx-1].html === '' ? 80 : Math.random() * 85 + 55;
+    const delay = script.lines[lineIdx-1].html === '' ? 70 : Math.random() * 80 + 45;
     setTimeout(nextLine, delay);
   }
   nextLine();
@@ -1714,8 +2093,31 @@ runBtn.addEventListener('click', () => {
   runScript(scriptIdx);
 });
 
+document.getElementById('termPrevBtn')?.addEventListener('click', () => {
+  if (isRunning) return;
+  scriptIdx = (scriptIdx - 1 + scripts.length) % scripts.length;
+  runScript(scriptIdx);
+});
+
+document.getElementById('termNextBtn')?.addEventListener('click', () => {
+  if (isRunning) return;
+  scriptIdx = (scriptIdx + 1) % scripts.length;
+  runScript(scriptIdx);
+});
+
+document.querySelectorAll('.term-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    if (isRunning) return;
+    const targetIdx = parseInt(pill.dataset.script);
+    if (!isNaN(targetIdx)) {
+      scriptIdx = targetIdx;
+      runScript(scriptIdx);
+    }
+  });
+});
+
 // Auto-run on load
-setTimeout(() => runScript(0), 600);
+setTimeout(() => runScript(0), 500);
 
 /* ═══════════════════════════════════════════
    SKILL TABS
@@ -1853,6 +2255,107 @@ const revealObserver = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal, .stagger').forEach(el => revealObserver.observe(el));
 const skillsLayout = document.querySelector('.skills-layout');
 if (skillsLayout) revealObserver.observe(skillsLayout);
+
+/* ═══════════════════════════════════════════
+   TOUCH / GESTURE INTERACTIONS (Mobile & Tablet)
+═══════════════════════════════════════════ */
+// Touch Swipe Helper
+function setupSwipe(element, onSwipeLeft, onSwipeRight) {
+  if (!element) return;
+  let startX = 0, startY = 0, startTime = 0;
+  element.addEventListener('touchstart', e => {
+    if (e.touches.length === 1) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      startTime = Date.now();
+    }
+  }, { passive: true });
+
+  element.addEventListener('touchend', e => {
+    if (e.changedTouches.length === 1) {
+      const distX = e.changedTouches[0].clientX - startX;
+      const distY = e.changedTouches[0].clientY - startY;
+      const elapsed = Date.now() - startTime;
+      if (elapsed < 600 && Math.abs(distX) >= 40 && Math.abs(distX) > Math.abs(distY) * 1.4) {
+        if (distX < 0) {
+          onSwipeLeft();
+        } else {
+          onSwipeRight();
+        }
+      }
+    }
+  }, { passive: true });
+}
+
+// 1. Swipe between live terminal scripts
+if (tbody) {
+  setupSwipe(tbody, () => {
+    if (isRunning) return;
+    scriptIdx = (scriptIdx + 1) % scripts.length;
+    runScript(scriptIdx);
+  }, () => {
+    if (isRunning) return;
+    scriptIdx = (scriptIdx - 1 + scripts.length) % scripts.length;
+    runScript(scriptIdx);
+  });
+}
+
+// 2. Swipe between skill category panels
+const skillTabs = Array.from(document.querySelectorAll('.skill-tab'));
+const skillsContentEl = document.querySelector('.skills-content');
+function switchSkillTabByIndex(index) {
+  if (index >= 0 && index < skillTabs.length) {
+    const tab = skillTabs[index];
+    tab.click();
+    tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }
+}
+if (skillsContentEl) {
+  setupSwipe(skillsContentEl, () => {
+    const current = skillTabs.findIndex(t => t.classList.contains('active'));
+    if (current !== -1 && current < skillTabs.length - 1) {
+      switchSkillTabByIndex(current + 1);
+    }
+  }, () => {
+    const current = skillTabs.findIndex(t => t.classList.contains('active'));
+    if (current > 0) {
+      switchSkillTabByIndex(current - 1);
+    }
+  });
+}
+
+// 3. Touch support for skill chips (tap to show tooltip on phones/tablets)
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', e => {
+    const isActive = chip.classList.contains('touch-active');
+    document.querySelectorAll('.chip.touch-active').forEach(c => c.classList.remove('touch-active'));
+    if (!isActive) {
+      chip.classList.add('touch-active');
+    }
+    e.stopPropagation();
+  });
+});
+document.addEventListener('click', () => {
+  document.querySelectorAll('.chip.touch-active').forEach(c => c.classList.remove('touch-active'));
+});
+
+// 4. Back to top button visibility
+const backToTopBtn = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 320) {
+    backToTopBtn?.classList.add('show');
+  } else {
+    backToTopBtn?.classList.remove('show');
+  }
+}, { passive: true });
+
+// 5. Mobile bottom dock click handling
+document.querySelectorAll('.mobile-bottom-dock .dock-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.mobile-bottom-dock .dock-item').forEach(d => d.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
 </script>
 </body>
 </html>
